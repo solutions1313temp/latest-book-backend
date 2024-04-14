@@ -12,7 +12,7 @@ app.use(cors());
 
 mongoose
   .connect(
-    "mongodb+srv://solutions1313temp:solutions1313@cluster0.njjxldt.mongodb.net/latestbook"
+    "mongodb+srv://parmeet2311:sunny1234@cluster0.dddni3k.mongodb.net/latestbook"
   )
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB", err));
@@ -36,10 +36,18 @@ Sequence.findOne({})
     console.error("Error finding or creating sequence:", err);
   });
 
-// Function to get the next link
-const getNextLink = async () => {
+// Route to get the next link
+app.get("/", async (req, res) => {
   try {
-    let sequence = await Sequence.findOne({});
+    res.json("Hello Developers");
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post('/nextLink', async (req, res) => {
+  try {
+    let sequence = await Sequence.findOne({}).maxTimeMS(20000); // Increase timeout to 20 seconds
     const links = [
       "+918988880425", //1
       "+919216041313", //2
@@ -53,39 +61,13 @@ const getNextLink = async () => {
       "+918699559516", //10
     ];
     const nextLink = links[sequence.currentLinkIndex];
-    console.log("sequence.currentLinkIndex", sequence.currentLinkIndex);
     sequence.currentLinkIndex = (sequence.currentLinkIndex + 1) % links.length;
     await sequence.save();
-    return nextLink;
-  } catch (error) {
-    console.error("Error fetching next link:", error);
-    return null;
-  }
-};
-
-// Route to get the next link
-app.get("/", async (req, res) => {
-  try {
-    res.json("Hello Developers");
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// Route to get the next link
-app.post("/nextLink", async (req, res) => {
-  try {
-    const nextLink = await getNextLink();
     res.json({ nextLink });
   } catch (error) {
-    console.error("Error fetching next link:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error fetching next link:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-
-app.get("/api/cron", async (req, res) => {
-  const nextLink = await getNextLink();
-  res.send({ message: "Updated phone number", nextLink });
 });
 
 
