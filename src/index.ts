@@ -8,9 +8,11 @@ const port = 9000;
 app.use(cors());
 
 // Connect to MongoDB
+
+
 mongoose
   .connect(
-    "mongodb+srv://solutions1313temp:solutions1313@cluster0.njjxldt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/banner"
+    "mongodb+srv://solutions1313temp:solutions1313@cluster0.njjxldt.mongodb.net/latestbook"
   )
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB", err));
@@ -86,14 +88,6 @@ app.get("/api/cron", async (req, res) => {
   res.send({ message: "Updated phone number", nextLink });
 });
 
-// setInterval(async () => {
-//   try {
-//     const nextLink = await getNextLink();
-//     console.log('Automatically changed link:', nextLink);
-//   } catch (error) {
-//     console.error('Error changing link:', error);
-//   }
-// }, 20000);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
